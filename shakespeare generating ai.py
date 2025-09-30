@@ -1,3 +1,7 @@
+# this was done purely as a learning experience, the following code contains a few bugs and errors
+# and was done in order to learn and understand how transformers worked
+# its a copy of Andrej Karpathy's model
+
 #we always start with a dataset to train on. We download the tiny shakespere dataset
 import urllib.request
 import torch
@@ -167,7 +171,7 @@ class BigramLanguageModel(nn.Module):
 
     # idx and targets are both (B,T) tensor of integers
     tok_emb = self.token_embedding_table(idx) # (B,T,C)
-    pos_emb = self.token_embedding_table(idx) # (B,T,C)
+    pos_emb = self.position_embedding_table(torch.arange(T, device=idx.device)) # (T,C)
     x = tok_emb + pos_emb # (B,T,C)
     x = self.blocks(x) # (B,T,C)
     x = self.ln_f(x) # (B,T,C)
@@ -226,4 +230,5 @@ for iter in range(max_iters):
 print(loss.item())
 
 print(decode(m.generate(idx = torch.zeros((1, 1), dtype=torch.long, device=device), max_new_tokens=500)[0].tolist()))
+
 # remove the device=device argument in the print() above, if the code doesnt work
