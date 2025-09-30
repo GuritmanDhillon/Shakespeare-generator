@@ -171,7 +171,7 @@ class BigramLanguageModel(nn.Module):
 
     # idx and targets are both (B,T) tensor of integers
     tok_emb = self.token_embedding_table(idx) # (B,T,C)
-    pos_emb = self.position_embedding_table(torch.arange(T, device=idx.device)) # (T,C)
+    pos_emb = self.token_embedding_table(idx) # (B,T,C)
     x = tok_emb + pos_emb # (B,T,C)
     x = self.blocks(x) # (B,T,C)
     x = self.ln_f(x) # (B,T,C)
@@ -232,3 +232,4 @@ print(loss.item())
 print(decode(m.generate(idx = torch.zeros((1, 1), dtype=torch.long, device=device), max_new_tokens=500)[0].tolist()))
 
 # remove the device=device argument in the print() above, if the code doesnt work
+
